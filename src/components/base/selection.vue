@@ -1,53 +1,61 @@
 <template>
-    <div class="selection-component">
-      <div class="selection-show" @click="toggleDrop">
-        <span>{{ selections[nowIndex].label }}</span>
-        <div class="arrow"></div>
-      </div>
-      <div class="selection-list" v-if="isDrop">
-        <ul>
-          <li v-for="(item, index) in selections" @click="chooseSelection(index)">{{ item.label }}</li>
-        </ul>
-      </div>
+  <div class="selection-component">
+    <div class="selection-show" @click="toggleDrop">
+      <span>{{ selections[nowIndex].label }}</span>
+      <div class="arrow"></div>
     </div>
+    <div class="selection-list" v-if="isDrop">
+      <ul>
+        <li
+          v-for="(item, index) in selections"
+          :key="index"
+          @click="chooseSelection(index)"
+        >
+          {{ item.label }}
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-import {eventBus} from '../../eventBus'
+import { eventBus } from "@/eventBus";
 export default {
   props: {
     selections: {
       type: Array,
-      default: [{
-        label: 'test',
-        value: 0
-      }]
+      default: [
+        {
+          label: "test",
+          value: 0
+        }
+      ]
     }
   },
-  data () {
+  data() {
     return {
       isDrop: false,
       nowIndex: 0
-    }
+    };
   },
-  mounted () {
-    eventBus.$on('reset-component' , () => {
-      this.isDrop = false
-    })
+  mounted() {
+    eventBus.$on("reset-component", () => {
+      this.isDrop = false;
+    });
   },
   methods: {
-    toggleDrop (event) {
-      event.stopPropagation()
-      eventBus.$emit('reset-component')
-      this.isDrop = !this.isDrop
+    toggleDrop(event) {
+      event.stopPropagation();
+      eventBus.$emit("reset-component");
+      this.isDrop = !this.isDrop;
     },
-    chooseSelection (index) {
-      this.nowIndex = index
+    chooseSelection(index) {
+      this.nowIndex = index;
       // this.isDrop = false
-      this.$emit('on-change', this.selections[this.nowIndex])
+      this.$emit("on-change", this.selections[this.nowIndex]);
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -98,7 +106,6 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 .selection-list li:hover {
   background: #e3e3e3;

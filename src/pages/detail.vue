@@ -2,9 +2,15 @@
   <div class="detail-wrap">
     <div class="detail-left">
       <div class="product-board">
-        <img :src="productIcon">
+        <img :src="productIcon" />
         <ul>
-          <router-link v-for="item in products" :to="{ path: item.path }" tag="li" active-class="active">
+          <router-link
+            v-for="(item, index) in products"
+            :key="index"
+            :to="{ path: item.path }"
+            tag="li"
+            active-class="active"
+          >
             {{ item.name }}
           </router-link>
         </ul>
@@ -20,45 +26,45 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       products: [
         {
-          name: '数据统计',
-          path: 'count',
-          icon: require('../assets/images/1.png'),
+          name: "数据统计",
+          path: "count",
+          icon: require("../assets/images/1.png"),
           active: false
         },
         {
-          name: '数据预测',
-          path: 'forecast',
+          name: "数据预测",
+          path: "forecast",
           active: false
         },
         {
-          name: '流量分析',
-          path: 'analysis',
+          name: "流量分析",
+          path: "analysis",
           active: false
         },
         {
-          name: '广告发布',
-          path: 'publish',
+          name: "广告发布",
+          path: "publish",
           active: false
         }
       ],
       imgMap: {
-        '/detail/count': require("../assets/images/1.png"),
-        '/detail/forecast': require("../assets/images/2.png"),
-        '/detail/analysis': require("../assets/images/3.png"),
-        '/detail/publish': require("../assets/images/4.png")
+        "/detail/count": require("../assets/images/1.png"),
+        "/detail/forecast": require("../assets/images/2.png"),
+        "/detail/analysis": require("../assets/images/3.png"),
+        "/detail/publish": require("../assets/images/4.png")
       }
-    }
+    };
   },
   computed: {
-    productIcon () {
-      return this.imgMap[this.$route.path]
+    productIcon() {
+      return this.imgMap[this.$route.path];
     }
   }
-}
+};
 </script>
 
 <style>
@@ -102,7 +108,6 @@ export default {
   background: #fff;
 }
 .sales-board-form {
-
 }
 .sales-board-intro h2 {
   font-size: 20px;
@@ -123,12 +128,12 @@ export default {
   padding-bottom: 20px;
 }
 .sales-board-line-left {
-    display: inline-block;
-    width: 100px;
+  display: inline-block;
+  width: 100px;
 }
 .sales-board-line-right {
-    display: inline-block;
-    width: 75%;
+  display: inline-block;
+  width: 75%;
 }
 .sales-board-des {
   border-top: 20px solid #f0f2f5;
@@ -158,7 +163,7 @@ export default {
   color: #fff;
 }
 .sales-board-table td {
-    border: 1px solid #f0f2f5;
-    padding: 15px;
+  border: 1px solid #f0f2f5;
+  padding: 15px;
 }
 </style>

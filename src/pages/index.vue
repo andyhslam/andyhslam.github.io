@@ -1,39 +1,50 @@
 <template>
-<div class="index-wrap">
+  <div class="index-wrap">
     <div class="index-left">
       <div class="index-left-block">
         <h2>全部产品</h2>
-        
-        <template v-for="product in productList">
-          <h3>{{ product.title}}</h3>
+
+        <div v-for="product in productList" :key="product.title">
+          <h3>{{ product.title }}</h3>
           <ul>
-            <li v-for="item in product.list">
+            <li v-for="item in product.list" :key="item.id">
               <a :href="item.url">{{ item.name }}</a>
               <span v-if="item.hot" class="hot-tag">HOT</span>
             </li>
           </ul>
           <div v-if="!product.last" class="hr"></div>
-        </template>
+        </div>
       </div>
       <div class="index-left-block lastest-news">
         <h2>最新消息</h2>
         <ul>
-          <li v-for="item in newsList">
+          <li v-for="(item, index) in newsList" :key="index">
             <a :href="item.url" class="new-item">{{ item.title }}</a>
           </li>
         </ul>
       </div>
     </div>
     <div class="index-right">
-      <slide-show :slides="slides" :inv="invTime" @onchange="slideChange"></slide-show>
+      <slide-show
+        :slides="slides"
+        :inv="invTime"
+        @onchange="slideChange"
+      ></slide-show>
       <div class="index-board-list">
-        <div class="index-board-item" v-for="(item, index) in boardList" :class="[{'line-last' : index % 2 !== 0}, 'index-board-' + item.id]">
-          <div class="index-board-item-inner" >
+        <div
+          class="index-board-item"
+          v-for="(item, index) in boardList"
+          :key="index"
+          :class="[{ 'line-last': index % 2 !== 0 }, 'index-board-' + item.id]"
+        >
+          <div class="index-board-item-inner">
             <h2>{{ item.title }}</h2>
             <p>{{ item.description }}</p>
-            <div class="index-board-button">
-              <router-link class="button" :to="{path: 'detail/' + item.toKey}">立即购买</router-link>
-            </div>  
+            <div class="index-board-button" @click="resetComponent">
+              <router-link class="button" :to="{ path: 'detail/' + item.toKey }"
+                >立即购买</router-link
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -42,131 +53,145 @@
 </template>
 
 <script>
-import slideShow from '../components/slideShow'
+import { eventBus } from "@/eventBus";
+import slideShow from "@/components/slideShow";
 export default {
   components: {
     slideShow
   },
   // created（生命周期）就是组件创建完毕的时候执行
-  created: function () {
-    this.$http.get('api/getNewsList')
-    .then((res) => {
-      this.newsList = res.data
-    }, (err) => {
-      console.log(err)
-    })
+  created: function() {
+    this.$http.get("api/getNewsList").then(
+      res => {
+        this.newsList = res.data;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   },
   methods: {
-    slideChange (index) {
-      // console.log('slidechange' + index)
+    slideChange(index) {
+      console.log("slidechange" + index);
+    },
+    resetComponent() {
+      eventBus.$emit("reset-component");
     }
   },
-  data () {
+  data() {
     return {
       invTime: 2000,
       slides: [
         {
-          src: require('../assets/slideShow/pic1.jpg'),
-          title: 'xxx1',
-          href: 'detail/analysis'
+          src: require("../assets/slideShow/pic1.jpg"),
+          title: "xxx1",
+          href: "detail/analysis"
         },
         {
-          src: require('../assets/slideShow/pic2.jpg'),
-          title: 'xxx2',
-          href: 'detail/count'
+          src: require("../assets/slideShow/pic2.jpg"),
+          title: "xxx2",
+          href: "detail/count"
         },
         {
-          src: require('../assets/slideShow/pic3.jpg'),
-          title: 'xxx3',
-          href: 'detail/publish'
+          src: require("../assets/slideShow/pic3.jpg"),
+          title: "xxx3",
+          href: "detail/publish"
         },
         {
-          src: require('../assets/slideShow/pic4.jpg'),
-          title: 'xxx4',
-          href: 'detail/forecast'
+          src: require("../assets/slideShow/pic4.jpg"),
+          title: "xxx4",
+          href: "detail/forecast"
         }
       ],
       boardList: [
         {
-          title: '开放产品',
-          description: '开放产品是一款开放产品',
-          id: 'car',
-          toKey: 'analysis',
+          title: "开放产品",
+          description: "开放产品是一款开放产品",
+          id: "car",
+          toKey: "analysis",
           saleout: false
         },
         {
-          title: '品牌营销',
-          description: '品牌营销帮助你的产品更好地找到定位',
-          id: 'earth',
-          toKey: 'count',
+          title: "品牌营销",
+          description: "品牌营销帮助你的产品更好地找到定位",
+          id: "earth",
+          toKey: "count",
           saleout: false
         },
         {
-          title: '使命必达',
-          description: '使命必达快速迭代永远保持最前端的速度',
-          id: 'loud',
-          toKey: 'forecast',
+          title: "使命必达",
+          description: "使命必达快速迭代永远保持最前端的速度",
+          id: "loud",
+          toKey: "forecast",
           saleout: true
         },
         {
-          title: '勇攀高峰',
-          description: '帮你勇闯高峰，到达事业的顶峰',
-          id: 'hill',
-          toKey: 'publish',
+          title: "勇攀高峰",
+          description: "帮你勇闯高峰，到达事业的顶峰",
+          id: "hill",
+          toKey: "publish",
           saleout: false
         }
       ],
       newsList: [],
       productList: {
-       pc: {
-          title: 'PC产品',
+        pc: {
+          title: "PC产品",
           list: [
             {
-              name: '数据统计',
-              url: 'http://starcraft.com'
+              id: 1,
+              name: "数据统计",
+              url: "https://v3.cn.vuejs.org/"
             },
             {
-              name: '数据预测',
-              url: 'http://warcraft.com'
+              id: 2,
+              name: "数据预测",
+              url: "https://v3.cn.vuejs.org/"
             },
             {
-              name: '流量分析',
-              url: 'http://overwatch.com',
+              id: 3,
+              name: "流量分析",
+              url: "https://v3.cn.vuejs.org/",
               hot: true
             },
             {
-              name: '广告发布',
-              url: 'http://hearstone.com'
+              id: 4,
+              name: "广告发布",
+              url: "https://v3.cn.vuejs.org/"
             }
           ]
-       },
-       app: {
-         title: '手机应用类',
-         last: true,
-         list: [
+        },
+        app: {
+          title: "手机应用类",
+          last: true,
+          list: [
             {
-              name: '91助手',
-              url: 'http://weixin.com'
+              id: 5,
+              name: "91助手",
+              url: "https://vuejs.org/"
             },
             {
-              name: '产品助手',
-              url: 'http://twitter.com',
+              id: 6,
+              name: "产品助手",
+              url: "https://vuejs.org/",
               hot: true
             },
             {
-              name: '智能地图',
-              url: 'http://maps.com'
+              id: 7,
+              name: "智能地图",
+              url: "https://vuejs.org/"
             },
             {
-              name: '团队语音',
-              url: 'http://phone.com'
+              id: 8,
+              name: "团队语音",
+              url: "https://vuejs.org/"
             }
           ]
-       }
-     }
-    }
+        }
+      }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
@@ -225,16 +250,16 @@ export default {
   min-height: 125px;
   padding-left: 120px;
 }
-.index-board-car .index-board-item-inner{
+.index-board-car .index-board-item-inner {
   background: url(../assets/images/1.png) no-repeat;
 }
-.index-board-loud .index-board-item-inner{
+.index-board-loud .index-board-item-inner {
   background: url(../assets/images/2.png) no-repeat;
 }
-.index-board-earth .index-board-item-inner{
+.index-board-earth .index-board-item-inner {
   background: url(../assets/images/3.png) no-repeat;
 }
-.index-board-hill .index-board-item-inner{
+.index-board-hill .index-board-item-inner {
   background: url(../assets/images/4.png) no-repeat;
 }
 .index-board-item h2 {
